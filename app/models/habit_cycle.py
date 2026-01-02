@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index, Enum, Date
+from sqlalchemy.orm import relationship
 from enum import Enum as PyEnum
 from datetime import datetime
 from app.core.database import Base
@@ -27,6 +28,9 @@ class HabitCycle(Base):
   created_at = Column(DateTime, nullable=False, default=datetime.now)
   started_at = Column(DateTime)
   completed_at = Column(DateTime)
+
+  # Relationships
+  user = relationship("User", back_populates="habit_cycles")
 
   __table_args__ = (
     # Critical constraints:
