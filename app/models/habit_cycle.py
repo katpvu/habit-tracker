@@ -31,6 +31,7 @@ class HabitCycle(Base):
 
   # Relationships
   user = relationship("User", back_populates="habit_cycles")
+  habits = relationship("Habit", back_populates="habit_cycle", cascade="all, delete-orphan", order_by="Habit.created_at.desc()")
 
   __table_args__ = (
     # Critical constraints:

@@ -7,6 +7,7 @@ from app.core.database import Base
 class Providers(PyEnum):
   GOOGLE = 'google'
   DISCORD = 'discord'
+  DISCORD_BOT = 'dicord_bot'
 
 class AuthProvider(Base):
   __tablename__ = "auth_providers"
