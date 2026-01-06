@@ -26,6 +26,10 @@ class Settings(BaseSettings):
     # Application
     API_URL: str = "http://localhost:8000"
 
+    # Feature specific configurations
+    MIN_HABITS_REQUIRED_TO_START_CYCLE: int = 3
+    
+
     class Config:
         env_file = ".env"
         case_sensitive = True
