@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import Column, Integer, DateTime, Enum, String, Index, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 from enum import Enum as PyEnum
 from app.core.database import Base
+
+if TYPE_CHECKING:
+    from app.models.user import User
 
 class Providers(PyEnum):
   GOOGLE = 'google'
@@ -23,7 +27,7 @@ class AuthProvider(Base):
   updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now)
 
   # Relationships
-  user = relationship("User", back_populates="auth_providers")
+  user: Mapped["User"] = relationship("User", back_populates="auth_providers")
 
   __table_args__ = (
     Index('idx_provider_user_unique', 'provider', 'provider_user_id', unique=True),

@@ -1,8 +1,12 @@
+from typing import TYPE_CHECKING
 from app.core.database import Base
 from sqlalchemy import Column, Integer, ForeignKey, Boolean, DateTime, Date, UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 from datetime import datetime
 
+if TYPE_CHECKING:
+    from ..models.habit import Habit
+    
 class HabitEntry(Base):
   __tablename__ = "habit_entries"
 
@@ -13,7 +17,7 @@ class HabitEntry(Base):
   completed_at = Column(DateTime, nullable=True) # Only set when completed
   created_at = Column(DateTime, default=datetime.now)
 
-  habit = relationship("Habit", back_populates="habit_entries")
+  habit: Mapped["Habit"] = relationship("Habit", back_populates="habit_entries")
 
   __table_args__ = (
     # Disables users from submitting another entry for the same habit in the same day
