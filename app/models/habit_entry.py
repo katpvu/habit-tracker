@@ -24,3 +24,8 @@ class HabitEntry(Base):
     UniqueConstraint('habit_id', 'entry_date', name='uniq_habit_entry_date'),
   )
 
+  def mark_complete(self):
+     """Mark this entry as completed"""
+     self.completed = True
+     self.completed_at = datetime.now()
+
