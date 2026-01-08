@@ -4,7 +4,7 @@ from app.core.database import get_db
 from app.dependencies.auth import get_current_user
 from app.models.user import User
 from app.services.habit_service import HabitService
-from ..schemas.habit import HabitAdd, HabitResponse, HabitUpdate
+from ..schemas.habit import HabitAdd, HabitResponse, HabitUpdate, EntryResponse
 
 router = APIRouter(
   prefix="/habits",
@@ -56,3 +56,17 @@ def update_habit(
     updates=updates
   )
   return habit
+
+@router.post("/{habit_id}/complete", response_model=EntryResponse)
+def log_habit_complete(
+  habit_id: int,
+  db: Session = Depends(get_db),
+  current_user: User = Depends(get_current_user)
+):
+  habit_service = HabitService(db)
+  entry = habit_service.add_entry(
+    user_id=current_user.id,
+    habit_id=habit_id,
+    completed=True
+  )
+  return entry

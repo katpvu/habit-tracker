@@ -1,12 +1,13 @@
 from typing import List, Optional
+import logging
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import IntegrityError
 from datetime import datetime, timezone
 from app.core.config import settings
 from app.core.exceptions import NotFoundError, ValidationError, ConflictError
-from app.models.habit_cycle import HabitCycle, CycleStatuses, CycleTypes
-from app.models.habit import Habit
+from ..models import HabitEntry, Habit, HabitCycle, CycleStatuses, CycleTypes
 from app.schemas.habit import HabitUpdate
+from datetime import date
 
 """
 Habit service layer that contains all the business logic pertaining to habit cycle management, CRUD operations for habits, and habit entries
@@ -181,7 +182,37 @@ class HabitService:
   # ============== ENTRY MANAGEMENT ================
 
   # Add a habit entry
+  def add_entry(self, user_id: int, habit_id: int, completed: bool) -> HabitEntry:
+    habit = self._get_habit(
+      user_id=user_id, 
+      habit_id=habit_id
+    )
 
+    cycle = habit.habit_cycle
+
+    if cycle.status is not CycleStatuses.ACTIVE:
+      raise ValidationError(f"Cannot add entry for a cycle that is not active")
+    
+    habit_entry = HabitEntry(
+      habit_id=habit_id,
+      entry_date=date.today()
+    )
+
+    if completed:
+      habit_entry.mark_complete()
+
+    try:
+      self.db.add(habit_entry)
+      self.db.commit()
+    except IntegrityError:
+      # DB constraint on habit_id and entry_date to prevent duplicate entries 
+      self.db.rollback()
+      raise ConflictError("Entry for this habit already exists")
+      
+
+    self.db.refresh(habit_entry)
+    return habit_entry
+  
   # Private methods
   def _get_cycle(self, cycle_id: int, user_id: int) -> HabitCycle:
     cycle = self.db.query(HabitCycle).filter(

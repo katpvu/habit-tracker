@@ -1,6 +1,6 @@
 from typing import List, Optional
 from pydantic import BaseModel, Field, ConfigDict
-from datetime import datetime
+from datetime import datetime, date
 from app.models.habit_cycle import CycleTypes, CycleStatuses
 
 # =============== REQUEST MODELS ===============
@@ -55,3 +55,13 @@ class CycleListResponse(BaseModel):
   created_at: datetime
   started_at: Optional[datetime]
   completed_at: Optional[datetime]
+
+class EntryResponse(BaseModel):
+  model_config = ConfigDict(from_attributes=True)
+  id: int
+  habit_id: int
+  entry_date: date
+  completed: bool
+  completed_at: datetime
+  created_at: datetime
+  habit: HabitResponse
