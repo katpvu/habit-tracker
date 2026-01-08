@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 
 
@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     Application configuration settings.
     Values are loaded from environment variables.
     """
-
+    ENVIRONMENT: str = "development"
     # Database
     DATABASE_URL: str
 
@@ -28,11 +28,11 @@ class Settings(BaseSettings):
 
     # Feature specific configurations
     MIN_HABITS_REQUIRED_TO_START_CYCLE: int = 3
-    
 
-    class Config:
-        env_file = ".env"
-        case_sensitive = True
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        case_sensitive=True
+    )
 
 
 settings = Settings()
