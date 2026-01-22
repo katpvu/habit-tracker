@@ -8,7 +8,7 @@ source .venv/bin/activate
 
 ### Check if VE is Active
 ```bash
-which python # /home/katpvu/projects/code/habit-tracker/.venv/bin/python
+which python 
 ```
 
 ### Update `pip` to the latest version
@@ -32,3 +32,20 @@ pip freeze > requirements.txt
 ```bash
 deactivate
 ```
+
+### Running the server
+```bash
+fastapi dev app/main.py
+```
+
+### Starting up postgresql
+```bash
+sudo service postgresql start
+```
+
+### Connecting to the database
+```bash
+psql -U habit_user -d habit_tracker
+```
+
+Password: dev_password_123
