@@ -62,6 +62,6 @@ class EntryResponse(BaseModel):
   habit_id: int
   entry_date: date
   completed: bool
-  completed_at: datetime
+  completed_at: Optional[datetime]
   created_at: datetime
   habit: HabitResponse
