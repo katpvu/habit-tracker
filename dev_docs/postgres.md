@@ -23,7 +23,7 @@ GRANT ALL ON SCHEMA public TO habit_user;
 
 Connect to database as habit_user
 ```bash
-psql -h localhost -u habit_user -d habit_tracker
+psql -h localhost -U habit_user -d habit_tracker
 ```
 
 Note: Include `-h localhost` if you haven't updated PostgreSQL Authentication (pg_hba.conf)  
