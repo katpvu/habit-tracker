@@ -181,6 +181,23 @@ class HabitService:
 
   # ============== ENTRY MANAGEMENT ================
 
+  def get_entry_for_date(self, user_id: int, habit_id: int, entry_date: date) -> Optional[HabitEntry]:
+    """
+    Get habit entry for a specific date.
+    Returns None if no entry exists for that date.
+    Validates habit ownership via _get_habit().
+    """
+    # Verify habit belongs to user (raises NotFoundError if not)
+    habit = self._get_habit(user_id, habit_id)
+
+    # Query for entry on specific date
+    entry = self.db.query(HabitEntry).filter(
+        HabitEntry.habit_id == habit.id,
+        HabitEntry.entry_date == entry_date
+    ).first()
+
+    return entry
+
   # Add a habit entry
   def add_entry(self, user_id: int, habit_id: int, completed: bool) -> HabitEntry:
     habit = self._get_habit(

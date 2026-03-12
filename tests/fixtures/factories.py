@@ -1,4 +1,4 @@
-from app.models import User, HabitCycle, Habit, CycleTypes, CycleStatuses, HabitEntry
+from app.models import User, HabitCycle, Habit, CycleTypes, CycleStatuses, HabitEntry, AuthProvider, Providers
 from sqlalchemy.orm import Session
 from datetime import datetime, date
 
@@ -63,6 +63,7 @@ class HabitFactory:
     return habit
 
 class EntryFactory:
+  @staticmethod
   def create(db: Session, habit_id: int, **kwargs) -> HabitEntry:
     """Create a habit entry and save into DB"""
     defaults = {
@@ -80,3 +81,24 @@ class EntryFactory:
     db.commit()
     db.refresh(entry)
     return entry
+
+
+class AuthProviderFactory:
+  @staticmethod
+  def create(db: Session, user_id: int, provider: Providers = Providers.DISCORD, **kwargs) -> AuthProvider:
+    """Create an auth provider and save into DB"""
+    defaults = {
+      "provider_user_id": "123456789"
+    }
+    defaults.update(kwargs)
+
+    auth_provider = AuthProvider(
+      user_id=user_id,
+      provider=provider,
+      **defaults
+    )
+
+    db.add(auth_provider)
+    db.commit()
+    db.refresh(auth_provider)
+    return auth_provider
